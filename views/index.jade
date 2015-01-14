@@ -1,5 +1,19 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div(class="container")
+    h1 Welcome to AddressBook
+    br
+    form(action="/login",method="post",data-ajax='false')
+      label Username 
+      input(type='text' name='userName')
+      br
+      br
+      label Password 
+      input(type='password' name='password')
+      br
+      br
+      input(type="submit",value="Login")
+      br
+      p Not registered yet?
+      a(href="/register") Register now

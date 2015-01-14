@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    div(class="container")
+      h1 Lets register you!
+      br
+      div(class="containerLeft")
+        form(action="/createUser",method="post",data-ajax='false')
+          label(class="containerUsername") Username
+          br
+          input(type='text' name='username')
+          br
+          br
+          label(class="containerLeft") Email
+          br
+          input(type='text' name='email')
+          br
+          br
+          label(class="containerLeft") Password
+          br
+          input(type='password' name='password')
+          br
+          br
+          label(class="containerLeft") Re-enter Password
+          br
+          input(type='password' name='reEnteredPassword')
+          br
+          br
+          input(type="submit",value="Register")
+      
