@@ -17,3 +17,12 @@ block content
       br
       p Not registered yet?
       a(href="/register") Register now
+    br
+    br
+    label List of existing users
+    br
+    ul(data-role='listview',data-filter='true',data-input='#test')
+    each user in user_data
+      li 
+        p #{user.userName}
+    //button(action="/showUsers") Show users
