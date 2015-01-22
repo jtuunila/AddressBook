@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  div(class="container")
+    h1 Addresses for #{username} are
+    ul
+      each address in addresses
+        li
+          a(href='/contact_info?id=#{address._id}') #{address.name}
+    a(href='/addAddress') Add new contact

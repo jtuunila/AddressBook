@@ -13,17 +13,27 @@ mongoose.connect(uri,function(err,succ){
 });
 
 // Luo schema
-var uSchema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
-var userSchema = new uSchema({
+var userSchema = new Schema({
 userName: {type:String, index:{unique:true}},
 password: String,
 emailAddress: String,
 addresses: []
 });
 
-// Luo malli
+var addressSchema = new Schema({
+    owner:String,
+    name:String,
+    address:String,
+    email:String,
+});
+
+
+// Luo malli käyttäjälle
 var user = mongoose.model("user", userSchema);
+// Luo malli osoitteelle
+var address = mongoose.model("address", addressSchema);
 
 // Create user function
 exports.createUser = function(req, res){
@@ -75,17 +85,18 @@ exports.getUsers = function(req, res){
 // Handle login event
 exports.login = function(req, res){
   console.log('login started'); 
-  var username = req.body.userName;
-  var password = req.body.password
-  user.find({userName: username}, function(err, data){
-   console.log(data[0].password); 
-    if (password == data[0].password ){
-    console.log('login ok'); 
-    //res.redirect('/');
-  }
-  else{
-  console.log('login not ok'); 
-    //res.redirect('/');
+  user.find({userName: req.body.userName, password:req.body.password}, function(err,data)   {
+      if (err || data.length == 0){
+          console.log('login nok'); 
+          res.render('index', {status:'Incorrect login data'});
+      }
+      else{
+      console.log('login ok');
+       console.log(req.body.userName);   
+      req.session.logged = true;
+      req.session.username = req.body.userName;
+      res.redirect('/viewAddresses');
+          
   }
   });
   /*
@@ -100,3 +111,71 @@ exports.login = function(req, res){
   */
 
 }
+
+exports.showAddAddress = function(req, res){
+     if(req.session.logged){
+        res.render('addaddress')
+        //queries.getDataForUser(req,res);
+    }
+    else{
+        res.render('index',{status:'Relog to application'});
+    }   
+}
+
+exports.saveAddress = function(req, res){
+    
+    console.log('saveAddress called');
+    var tempAddress = new address({
+        owner:req.session.username,
+        name:req.body.name,
+        address:req.body.address,
+        email:req.body.email
+    });
+    
+    tempAddress.save(function(err){
+        if(err){
+            console.log('error' + err)
+            res.render('addAddress',{error:'Could not save contact in database'});
+        }
+        else{
+            console.log('address saved successfully')
+            //res.render('addresses',{username:req.session.username});
+            res.redirect('/viewAddresses');
+        }
+    });
+}
+
+
+exports.getUserAddresses = function(req,res){
+    console.log('getUserAddresses called');
+    address.find({owner:req.session.username},function(err,data){
+        
+        if(err){
+            console.log('error fetching user data');
+            res.render('error');
+        }
+        else{
+            console.log(data);
+            res.render('addresses',{username:req.session.username,addresses:data});
+        }
+    });
+}
+
+exports.getContactInfo = function(req,res){
+    if(req.session.loggedin)
+    {
+        address.findById(req.query.id,function(err,data){
+            if(err){
+                res.render('error');
+            }
+            else{
+                res.render('showUser',data);
+            }
+        });
+    }
+    else{
+        res.render('index',{title:'Login',error:''});
+    }
+}
+
+

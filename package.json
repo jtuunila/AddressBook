@@ -13,6 +13,10 @@
     "serve-favicon": "~2.2.0",
     "debug": "~2.1.1",
     "jade": "~1.8.2",
-    "stylus": "0.42.3"
+    "stylus": "0.42.3",
+    "mongoose":"3.8.21",
+    "mongodb":"1.4.28",
+    "express-session":"1.10.1"  
+      
   }
 }

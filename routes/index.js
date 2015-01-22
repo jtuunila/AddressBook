@@ -4,8 +4,8 @@ var userManager = require('../modules/userManager');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  //res.render('index', { title: 'Express' });
-  userManager.getUsers(req, res);
+  res.render('index', { status: '' });
+  //userManager.getUsers(req, res);
 });
 
 router.get('/register', function(req, res) {
