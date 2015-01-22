@@ -29,11 +29,12 @@ app.use('/register', routes);
 app.use('/createUser', userManager.createUser);
 app.use('/showUsers', userManager.getUsers);  // Not used anymore, for testing
 app.use('/login', userManager.login);
+app.use('/logout', userManager.logout);
 //app.use('/viewAddresses', userManager.viewAddresses)
 app.use('/viewAddresses', userManager.getUserAddresses)
 app.use('/addAddress', userManager.showAddAddress)
 app.use('/saveAddress', userManager.saveAddress)
-app.use('/contact_info',queries.getContactInfo)
+app.use('/contact_info',userManager.getContactInfo)
 
 
 // catch 404 and forward to error handler

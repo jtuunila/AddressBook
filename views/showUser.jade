@@ -1,9 +1,9 @@
 extends layout
 
 block content
-  a(href='/logout',id='logout') Logout
+  a(href='/logout',id='logout') Logout(#{username})
   div(class='container')
-    div(data-role='header') #{name}
+    div(data-role='header') #{mydata.name}
     table(data-role='table',data-mode='reflow')
       thead
         tr
@@ -11,5 +11,5 @@ block content
           th Email
       tbody
         tr
-          td #{address}
-          td #{email}
+          td #{mydata.address}
+          td #{mydata.email}

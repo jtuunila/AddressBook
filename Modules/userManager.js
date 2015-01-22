@@ -18,8 +18,7 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
 userName: {type:String, index:{unique:true}},
 password: String,
-emailAddress: String,
-addresses: []
+emailAddress: String
 });
 
 var addressSchema = new Schema({
@@ -53,6 +52,7 @@ exports.createUser = function(req, res){
   tmpUser.save(function(err){
   
   if(err){
+    console.log(err);
     console.log('user not saved');
     // res.render('myError', {});
   }
@@ -92,9 +92,10 @@ exports.login = function(req, res){
       }
       else{
       console.log('login ok');
-       console.log(req.body.userName);   
+       console.log(req.body.userName);
+       console.log(data[0].userName);
       req.session.logged = true;
-      req.session.username = req.body.userName;
+      req.session.username = data[0].userName;
       res.redirect('/viewAddresses');
           
   }
@@ -148,34 +149,51 @@ exports.saveAddress = function(req, res){
 
 exports.getUserAddresses = function(req,res){
     console.log('getUserAddresses called');
+    if(req.session.logged){
+    console.log('Session OK');
     address.find({owner:req.session.username},function(err,data){
-        
-        if(err){
-            console.log('error fetching user data');
-            res.render('error');
-        }
-        else{
-            console.log(data);
-            res.render('addresses',{username:req.session.username,addresses:data});
-        }
+      if(err){
+        console.log('error fetching user data');
+        res.render('error');
+      }
+      else{
+        console.log(data);
+        res.render('addresses',{username:req.session.username,addresses:data});
+      }
     });
+    }
+  else{
+  console.log('Session NOK');
+  res.redirect('/');  
+  }
+    
 }
 
 exports.getContactInfo = function(req,res){
-    if(req.session.loggedin)
-    {
-        address.findById(req.query.id,function(err,data){
-            if(err){
-                res.render('error');
-            }
-            else{
-                res.render('showUser',data);
-            }
-        });
+  console.log('getContactInfo called');
+  if(req.session.logged){
+    console.log('Session OK');
+    address.findById(req.query.id,function(err,data){
+    if(err){
+      res.render('error');
     }
     else{
-        res.render('index',{title:'Login',error:''});
+      res.render('showUser',{username:req.session.username, mydata:data});
     }
+    });
+  }
+  else
+  {
+    console.log('Session NOK');
+    res.redirect('/');
+  }
+}
+
+exports.logout = function(req,res){
+    req.session.destroy();
+    res.status(301);
+    res.setHeader('location','/');
+    res.render('index',{title:'Login',error:''});
 }
 
 

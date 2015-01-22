@@ -1,10 +1,12 @@
 extends layout
 
 block content
+  a(href='/logout',id='logout') Logout(#{username})
   div(class="container")
-    h1 Addresses for #{username} are
-    ul
+    h1 Addresses
+    ul(data-role='listview')
       each address in addresses
         li
           a(href='/contact_info?id=#{address._id}') #{address.name}
+    br
     a(href='/addAddress') Add new contact
